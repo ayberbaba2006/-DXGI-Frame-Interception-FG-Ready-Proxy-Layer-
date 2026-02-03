@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.16)
+project(FrameGenProxyDLL)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CORE_SOURCES core/src/Core.cpp core/src/FrameGen.cpp core/src/Settings.cpp)
+set(PROXY_SOURCES proxy/src/DllMain.cpp proxy/src/DxgiProxy.cpp proxy/src/ProxyState.cpp)
+set(PROXY_HEADERS proxy/include/DxgiProxy.h proxy/include/ProxyState.h)
+
+add_library(dxgi SHARED ${CORE_SOURCES} ${PROXY_SOURCES} ${PROXY_HEADERS})
+
+target_include_directories(dxgi PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/core/include ${CMAKE_CURRENT_SOURCE_DIR}/proxy/include)
+
+target_link_libraries(dxgi PRIVATE d3d12.lib dxgi.lib d3dcompiler.lib)
+
+if(MSVC)
+    set_target_properties(dxgi PROPERTIES LINKER_LANGUAGE CXX LINK_FLAGS "/DEF:${CMAKE_CURRENT_SOURCE_DIR}/dxgi.def")
+endif()
+
+set_target_properties(dxgi PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
