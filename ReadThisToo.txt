@@ -1,0 +1,2 @@
+Some files retain legacy or inconsistent naming from earlier iterations.
+This has no impact on functionality and is documented for transparency.
